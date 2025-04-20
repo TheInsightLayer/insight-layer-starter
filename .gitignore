@@ -1,0 +1,8 @@
+.venv/
+.env
+__pycache__/
+data/*.json
+data/*.jsonl
+data/insight_faiss/
+*.pkl
+*.db
