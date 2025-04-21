@@ -1,211 +1,185 @@
-# 🧠 Insight Layer Starter
+# Insight Layer Framework: Contextual Memory Intelligence for Agents & Teams
 
-📝 MIT Licensed | Built with Python, Streamlit, LangChain, FAISS
-
-This repository demonstrates a minimal working example of an Insight Layer using documentation as the base use case. It captures key insights from files, stores them with metadata, and provides a simple UI for browsing and reusing those insights.
-
-> The Insight Layer is a new approach to capturing and reusing what your organization already knows. By extracting key insights from documentation and surfacing them in context, this project helps reduce rework and improve cross-team awareness.
-
-![Insight Layer Preview](preview.png)
+This framework empowers AI agents and organizations to:
+- **Remember** past insights and decisions
+- **Reuse** context across time, tools, and roles
+- **Refine** what matters with scoring and review
+- **Route** insight to the right task, person, or workflow
 
 ---
 
-## ✅ What’s Included
+##  Core Features
 
-- GPT-powered extraction pipeline
-- Streamlit UI with tagging, re-extract, and CSV export
-- FastAPI backend for programmatic access
-- FAISS embedding store for semantic search
-- Audit logging and lightweight JSON/SQLite storage
-
----
-
-## 🧠 Use Case
-
-Start with plain text (`.txt`) documentation and automatically extract reusable insights from it.
-
-Example use cases:
-- Internal process docs
-- Meeting notes
-- Onboarding guides
-- Strategy decks (exported to `.txt`)
+-  **InsightUnit schema** – structured memory with metadata, links, badges, and usage tracking
+-  **Role-based onboarding bundles** for learning journeys
+-  **Adaptive importance scoring** – factors in use, impact, links, and recency
+-  **Grounding verification** – check supporting files, dashboards, SQL
+-  **Review pipeline** – sensitivity, confidence, and approval scoring
+-  **Badges** – highlight critical or cautionary insights
+-  **User completion tracking** – for onboarding progress
+-  **Bundle admin UI** – curate reusable insight packs
 
 ---
 
-## ✨ Features
-
-- Ingest plain text documentation
-- Extract insights using OpenAI or fallback mock logic
-- Store insights with tags, related topics, and source metadata
-- Streamlit UI to view, search, and re-extract insights
-- Semantic search using FAISS (optional)
-- Audit log of created and re-extracted insights
-- CSV export
-- REST API with FastAPI
-- Dockerfile for API deployment
-
----
-
-## 🔧 Tech Stack
-
-- Python
-- LangChain + OpenAI (GPT-4 or GPT-3.5)
-- Streamlit
-- SQLite + JSON
-- FAISS (for semantic search)
-- FastAPI
-
----
-
-## ⚡ Quickstart
-
-### 1. Setup
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate    # Windows
-source .venv/bin/activate   # Mac/Linux
-
-pip install -r requirements.txt
-cp .env.example .env        # Add your OpenAI API key
-```
-
-### 2. Ingest and Extract
-
-```bash
-python src/ingest/ingest_docs.py docs/example-guide.txt
-python src/extract/extract_insights.py
-```
-
-### 3. Optional: Enable Semantic Search
-
-```bash
-python scripts/embed_existing_insights.py
-```
-
-This will embed all current insights to power semantic search in the UI.
-
----
-
-## 🎛️ Streamlit UI
-
-```bash
-streamlit run src/ui/streamlit_app.py
-```
-
-Search by:
-- **Keyword**: literal match in insight text, tags, or related topics
-- **Semantic**: FAISS-powered similarity search
-
-Also supports:
-- Re-extraction via GPT
-- Manual insight entry
-- CSV export
-- Audit logging
-
----
-
-## 🔌 API Access (Optional)
-
-Run:
-```bash
-uvicorn app.api:app --reload
-```
-
-Visit: [http://localhost:8000/docs](http://localhost:8000/docs)
-
-You can:
-- Get insights
-- Submit new ones
-- Extract via LLM
-
-See [app/README.md](app/README.md) for more details.
-
----
-
-## 🖥️ Quick Launch
-
-### ▶️ Windows
-
-```bash
-run_ui.bat
-```
-
-### 🐧 macOS/Linux
-
-```bash
-chmod +x run_ui.sh
-./run_ui.sh
-```
-
----
-
-## 📁 Directory Structure
+##  Project Directory Structure
 
 ```
-insight-layer-starter/
-├── .env.example
-├── README.md
-├── preview.png
-├── requirements.txt
-├── Dockerfile
-├── LICENSE
-├── CONTRIBUTING.md
-├── run_ui.bat
-├── run_ui.sh
-├── docs/
-│   └── example-guide.txt
-├── data/
-│   ├── raw_text.txt
-│   ├── insights.json
-│   ├── insights.db
-│   ├── audit_log.jsonl
-│   └── insight_faiss/
+.
+├── insight_layer_app/              # Streamlit multi-page UI
+│   ├── Home.py                     # Landing screen
+│   └── pages/
+│       ├── 1_Run_Insight_Agent.py
+│       ├── 2_Bundle_Viewer.py
+│       ├── 3_Bundle_Admin.py
+│       ├── 4_Onboarding_Insights.py
+│       ├── 5_Importance_Scoring.py
+│       ├── 6_Insight_Graph.py
+│       └── 7_Grounding_Checks.py
 ├── src/
-│   ├── ingest/
-│   ├── extract/
-│   ├── ui/
-│   ├── storage/
-│   └── utils/
-├── app/
-│   └── api.py
-├── scripts/
-│   └── embed_existing_insights.py
+│   ├── graph/                      # Task parsing, prompt building, insight writing
+│   ├── memory/                     # Vector memory, schema, logging
+│   ├── utils/                      # Scoring, review tools, insight pushers
+├── agents/                         # LangGraph agent pipelines
+├── tools/                          # LangChain-compatible insight tools
+├── configs/                        # Agent input, thresholds, graph layout
+├── data/
+│   ├── insights/                   # Individual InsightUnits (JSON)
+│   ├── bundles/                    # Role-specific and topic-specific groupings
+│   ├── trace_logs/                 # Run history and memory trace summaries
+│   ├── embeddings/                 # (Optional) local embedding cache
+│   ├── memory.db                   # SQLite metadata DB
+│   ├── sample_report.csv           # File-based reference (for grounding)
+│   └── user_completion.json        # Tracks onboarding completion
+├── notebooks/                      # Workflow demos and graph visualizations
+├── docs/                           # Architecture and flow diagrams
+├── scripts/                        # CLI agents, Neo4j exporter, refactor tools
+├── .env.example                    # OpenAI key, toggles, and trace config
+├── requirements.txt                # All required packages
+├── README.md                       # You are here
+└── streamlit_run_insight_agent.py  # CLI runner to invoke full agent graph
 ```
 
 ---
 
-## 💡 Insight Format
+##  Installation
 
-```json
-{
-  "source": "example-guide.txt",
-  "insight": "Clear roles reduce confusion in cross-functional projects.",
-  "tags": ["roles", "collaboration"],
-  "timestamp": "2025-04-20T14:00:00",
-  "related_to": ["project kickoff", "team setup"]
-}
+```bash
+pip install -r requirements.txt
+streamlit run insight_layer_app/Home.py
 ```
 
----
-
-## 🤝 Contributing
-
-PRs welcome! To contribute:
-
-1. Fork the repo
-2. Create a new branch
-3. Open a pull request with your improvements
+Ensure you configure your `.env` with your `OPENAI_API_KEY`.
 
 ---
 
-## 🔗 Resources
+## Getting Started
 
-- [OpenAI API](https://platform.openai.com/)
-- [LangChain](https://www.langchain.com/)
-- [Streamlit](https://streamlit.io/)
-- [FAISS](https://github.com/facebookresearch/faiss)
-- [FastAPI](https://fastapi.tiangolo.com/)
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-repo/cmi-langgraph-prototype.git
+   cd cmi-langgraph-prototype
+   ```
 
 ---
 
+##  Workflow Overview
+
+1. A user enters a task or query
+2. Relevant insights are retrieved from vector memory
+3. A prompt is constructed dynamically (LLM optional)
+4. The agent executes and returns structured output
+5. A new insight is summarized, scored, reviewed, and stored
+6. Trace logs and bundles are optionally updated
+
+---
+
+##  Feature Progress
+
+
+## Streamlit Interfaces
+
+| Component         | Status         | Notes                                                                 |
+|------------------|----------------|-----------------------------------------------------------------------|
+| Onboarding Viewer | ✅ Implemented | Users can view role-relevant insights and mark them as read.         |
+| Bundle Admin UI   | ✅ Implemented | Admins can create/edit insight bundles.                              |
+| Importance Scorer | ✅ Implemented | Users can adjust weights (used, links, outcome) and view sorted insights. |
+| Grounding Check   | ✅ Implemented | Verifies presence of watch_sources (files, URLs, SQL).               |
+| Graph View        | 🟡 Placeholder | Static PyVis display works; Neo4j/dynamic edges planned.             |
+| Agent Runner      | ✅ Implemented | Executes LangGraph agent with memory injection + summarizer.         |
+
+---
+
+## Agent & Memory Logic
+
+| Component                        | Status         | Notes                                                                 |
+|----------------------------------|----------------|-----------------------------------------------------------------------|
+| LangGraph Full Agent             | ✅ Implemented | Modular pipeline: task → memory → summary → bundle.                  |
+| LangChain InsightRecommender Tool| ✅ Implemented | Can be used inside LangChain agents.                                 |
+| LLM Task Parser Fallback         | ✅ Implemented | Regex fallback if LLM fails or is disabled.                          |
+| LLM Summarizer Fallback          | ✅ Implemented | Uses basic summary logic if LLM fails.                               |
+| Vector Search (FAISS)            | ✅ Implemented | Used for memory retrieval based on semantic similarity.              |
+| Embedding Cache                  | ✅ Implemented | Prevents redundant OpenAI embedding API calls.                       |
+| Vault Abstraction                | 🟡 Stubbed     | `vault.py` exists but not yet integrated.                            |
+
+---
+
+## Insight Management
+
+| Component                   | Status         | Notes                                                                 |
+|----------------------------|----------------|-----------------------------------------------------------------------|
+| Insight Schema (v4)        | ✅ Implemented | Includes roles, badges, confidence, watch_sources, references.       |
+| Memory Trace Logging       | ✅ Implemented | Saves agent input/output/insight trace logs.                         |
+| Trace Summary Folder       | ✅ Implemented | Stores insight summaries separately from trace.                      |
+| Auto-Bundling by Topic     | ✅ Implemented | New insights grouped into reusable bundles.                          |
+| Role-Based Filtering       | ✅ Implemented | Filters insights by role in UI + memory.                             |
+| Confidentiality Filters    | ✅ Implemented | Toggle to only include `team_only` insights.                         |
+| Auto-Linking Similar Insights | 🟡 WIP Logic Added | Uses reference and topic similarity.                                 |
+
+---
+
+## Evaluation & Review
+
+| Component                    | Status         | Notes                                                                 |
+|-----------------------------|----------------|-----------------------------------------------------------------------|
+| Importance Scoring          | ✅ Implemented | Based on usage, recency, links, outcome, impact.                     |
+| Auto-Review Classifier      | ✅ Implemented | Flags sensitivity, confidence, and sets review_status.               |
+| Prompt Performance Tracking | ✅ Implemented | Records success/failure outcomes per prompt.                         |
+| Prompt Templates YAML       | ✅ Implemented | Dynamically loads structured prompt designs.                         |
+| Config: Confidence Thresholds | ✅ Implemented | YAML-based config for ingestion/review rules.                        |
+| Unit Tests: Parser + Summarizer | ✅ Implemented | Covers fallback logic and schema issues.                             |
+
+---
+
+## Infrastructure & Dev Tools
+
+| Component                    | Status         | Notes                                                                 |
+|-----------------------------|----------------|-----------------------------------------------------------------------|
+| .env Config + Toggle        | ✅ Implemented | API key + config toggles.                                            |
+| README & Medium Post        | ✅ Complete    | Docs for use, install, and design.                                   |
+| Neo4j Export                | 🟡 Partial     | Script works but not auto-run or connected.                          |
+| Visual Architecture Diagram | 🟡 In Progress | PyVis graph placeholder; Neo4j planned.                              |
+| LangGraph Playground JSON Viewer | 🛠️ Planned | Schema complete; no interactive viewer yet.                          |
+| CI/CD or Dockerization      | 🛠️ Planned    | Needed for deployment or multi-user setup.                           |
+
+---
+
+##  Requirements
+
+```
+openai
+faiss-cpu
+langchain
+streamlit
+pydantic
+pyvis
+neo4j
+tqdm
+python-dotenv
+sentence-transformers
+pytest
+pyyaml
+torch
+pytest-mock
+neo4j-driver
+```
+---

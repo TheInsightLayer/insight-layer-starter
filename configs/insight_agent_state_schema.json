@@ -1,0 +1,52 @@
+
+
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InsightAgentState",
+  "type": "object",
+  "required": [
+    "task",
+    "task_meta"
+  ],
+  "properties": {
+    "task": {
+      "type": "string",
+      "description": "A natural language task or instruction for the agent to process"
+    },
+    "task_meta": {
+      "type": "object",
+      "required": [
+        "purpose",
+        "topic",
+        "quarter"
+      ],
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "description": "The overall goal or intent of the task"
+        },
+        "topic": {
+          "type": "string",
+          "description": "The domain or subject area of the task"
+        },
+        "quarter": {
+          "type": "string",
+          "description": "The time period for which the task is relevant (e.g. Q1, Q4)"
+        }
+      }
+    },
+    "auto_bundle": {
+      "type": "boolean",
+      "description": "If true, the agent will add the saved insight to a topic-based bundle"
+    },
+    "trace_enabled": {
+      "type": "boolean",
+      "description": "If true, logs the task, used insights, and output to a trace log"
+    },
+    "confidential_only": {
+      "type": "boolean",
+      "description": "If true, filters insight memory to only use those marked 'team_only'"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+# configs/insight_agent_config.yaml
+
+# This config defines a single run of the Insight Layer LangGraph agent
+# You can modify these fields to control the memory injection, task type, and logging behavior
+
+auto_bundle: true
+confidential_only: false
+trace_enabled: true
+
+task: Design a Q1 loyalty program
+
+task_meta:
+  purpose: campaign planning
+  quarter: Q1
+  topic: loyalty

@@ -1,0 +1,42 @@
+# configs/graph_config.yaml
+
+# Insight Layer LangGraph Configuration
+
+# This config controls optional behaviors in the LangGraph-based agent
+# Extend it as needed for future routing, step overrides, or runtime tuning
+
+defaults:
+  trace_enabled: true
+  auto_bundle: true
+  confidential_only: false
+  memory_strategy: vector
+
+graph:
+  max_steps: 5
+  return_trace: true
+
+nodes:
+  - name: parse_task
+    description: "Extracts task metadata like purpose, topic, and quarter"
+    implementation: "src.graph.task_parser.parse_task"
+
+  - name: retrieve_insights
+    description: "Loads relevant insights from InsightLayerMemory"
+    implementation: "src.memory.insight_layer_memory.load_context"
+
+  - name: construct_prompt
+    description: "Builds LLM prompt with injected context"
+    implementation: "src.graph.prompt_constructor.construct_prompt"
+
+  - name: run_task
+    description: "LLM call to generate solution or recommendation"
+    implementation: "src.graph.task_agent.run_task"
+
+  - name: summarize_output
+    description: "Creates a structured InsightUnit from LLM output"
+    implementation: "src.graph.summarizer.summarize_output"
+
+  - name: save_insight
+    description: "Saves structured insight to disk and vector index"
+    implementation: "InsightLayerMemory.save_context"
+

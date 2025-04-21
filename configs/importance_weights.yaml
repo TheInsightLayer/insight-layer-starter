@@ -1,0 +1,8 @@
+# configs/importance_weights.yaml
+importance_weights:
+  used: 0.4
+  links: 0.3
+  impact: 0.1
+  outcome: 0.1
+  recency: 0.1
+similarity_threshold: 0.75

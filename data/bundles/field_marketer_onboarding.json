@@ -1,0 +1,9 @@
+
+{
+  "bundle_id": "field_marketer_onboarding",
+  "name": "Top 5 Campaign Lessons",
+  "role": "field_marketer",
+  "audience": "new_hire",
+  "summary": "These insights helped prior marketers run successful Q3 and Q4 campaigns.",
+  "insights": ["insight_004", "insight_013", "insight_121"]
+}

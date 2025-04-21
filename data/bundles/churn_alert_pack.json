@@ -1,0 +1,9 @@
+{
+  "bundle_id": "churn_alert_pack",
+  "name": "Churn Alert Essentials",
+  "role": "product_manager",
+  "summary": "Key insights for addressing churn spikes and improving retention strategies.",
+  "insights": [
+    "insight_001"
+  ]
+}

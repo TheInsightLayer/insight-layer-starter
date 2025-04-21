@@ -1,0 +1,25 @@
+default:
+  system: "You are a helpful assistant."
+  user: |
+    Task: {task}
+
+    Relevant insights:
+    {insights}
+
+strategy_planning:
+  system: "You are an expert in strategic planning. Use historical context to guide your answer."
+  user: |
+    Based on previous strategies:
+    {insights}
+
+    Plan the following task:
+    {task}
+
+marketing_campaign:
+  system: "You are a campaign strategist. Use the provided insights to craft an effective plan."
+  user: |
+    Insights:
+    {insights}
+
+    Design a marketing campaign for:
+    {task}

@@ -1,0 +1,20 @@
+
+Insight Layer Memory Flow (Text Diagram)
+
+[ Task Input ]
+     ↓
+[ parse_task ]
+     ↓
+[ load_context (InsightLayerMemory) ]
+     └─> [ VectorStore.search() → Semantic Lookup via FAISS + Embeddings ]
+     ↓
+[ construct_prompt with retrieved insights ]
+     ↓
+[ run_task (LLM Agent) ]
+     ↓
+[ summarize_output ]
+     ↓
+[ save_context (InsightLayerMemory) ]
+     └─> [ VectorStore.add_insight() → Embed + Index ]
+     ↓
+[ Insight Saved + Memory Updated ]
