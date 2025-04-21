@@ -10,14 +10,20 @@ This framework empowers AI agents and organizations to:
 
 ##  Core Features
 
--  **InsightUnit schema** – structured memory with metadata, links, badges, and usage tracking
--  **Role-based onboarding bundles** for learning journeys
--  **Adaptive importance scoring** – factors in use, impact, links, and recency
--  **Grounding verification** – check supporting files, dashboards, SQL
--  **Review pipeline** – sensitivity, confidence, and approval scoring
--  **Badges** – highlight critical or cautionary insights
--  **User completion tracking** – for onboarding progress
--  **Bundle admin UI** – curate reusable insight packs
+- **InsightUnit schema** – structured memory with metadata, links, badges, references, usage tracking, and review status
+- **LangGraph agent pipeline** – modular flow: retrieve → reason → summarize → store
+- **Role-based onboarding bundles** – for team learning and ramp-up
+- **Adaptive importance scoring** – based on usage, recency, impact, links, and outcome alignment
+- **Grounding verification** – validates insight support via files, dashboards, or SQL (`watch_sources`)
+- **Auto-linking** – builds contextual links between similar or related insights
+- **Review pipeline** – uses GPT to classify sensitivity and confidence, applies thresholds from config
+- **Prompt tracking** – logs success/failure and adds to insight metadata
+- **Badges** – highlight key insights (`must_read`, `caution`, etc.)
+- **User completion tracking** – for onboarding and learning progress
+- **Bundle admin UI** – curate reusable insight packs
+- **Vector memory with FAISS** – semantic memory retrieval
+- **Embedding cache** – avoids redundant OpenAI API calls
+- **Configurable prompt templates** – dynamically select prompts based on task metadata
 
 ---
 
