@@ -1,5 +1,7 @@
 # Insight Layer Framework: Contextual Memory Intelligence for Agents & Teams
 
+[![DOI](https://zenodo.org/badge/969640251.svg)](https://doi.org/10.5281/zenodo.15262462)
+
 This framework empowers AI agents and organizations to:
 - **Remember** past insights and decisions
 - **Reuse** context across time, tools, and roles
