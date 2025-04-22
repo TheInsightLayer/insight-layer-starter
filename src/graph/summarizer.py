@@ -2,12 +2,17 @@ import os
 import json
 import time
 from datetime import datetime
-from openai import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage
 from typing import Optional
 from src.utils.review_classifier import auto_score_review  # Adds post-summary scoring logic
+from dotenv import load_dotenv
 
-# Initialize OpenAI API client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Load environment variables
+load_dotenv()
+
+# Initialize LangChain OpenAI API client
+client = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4")
 
 # Trace log (summarization process)
 TRACE_SUMMARY_PATH = "data/trace_logs/summaries"
@@ -90,15 +95,12 @@ def summarize_output(
 
     for attempt in range(max_retries + 1):
         try:
-            response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ]
-            )
+            response = client([
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=user_prompt)
+            ])
 
-            summary = json.loads(response.choices[0].message.content.strip())
+            summary = json.loads(response.content.strip())
 
             # Add placeholder for prompt success feedback
             summary["confidence"] = 1.0

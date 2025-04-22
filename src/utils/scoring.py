@@ -2,9 +2,13 @@ import yaml
 import os
 from datetime import datetime
 from typing import Dict, Optional
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Load weights from YAML if not provided directly
-def load_importance_weights(path: str = "configs/importance_weights.yaml") -> Dict[str, float]:
+def load_importance_weights(path: str = os.getenv("IMPORTANCE_WEIGHTS_PATH", "configs/importance_weights.yaml")) -> Dict[str, float]:
     if os.path.exists(path):
         with open(path, "r") as f:
             return yaml.safe_load(f)

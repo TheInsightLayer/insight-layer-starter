@@ -1,12 +1,17 @@
 import os
 import json
 from datetime import datetime
-from openai import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 PROMPT_TRACE_PATH = "data/trace_logs/prompts"
 os.makedirs(PROMPT_TRACE_PATH, exist_ok=True)
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4")
 
 def log_prompt_trace(task: str, task_meta: dict, insights: list, prompt: str, output: str, success: bool):
     """
@@ -35,14 +40,11 @@ def run_task(prompt: str, task_meta: dict = None, insights: list = None) -> str:
     system_msg = f"You are an assistant specializing in {task_meta.get('purpose', 'general')}."
     
     try:
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        output = response.choices[0].message.content.strip()
+        response = client([
+            SystemMessage(content=system_msg),
+            HumanMessage(content=prompt)
+        ])
+        output = response.content.strip()
         log_prompt_trace(task_meta.get("task", prompt), task_meta, insights, prompt, output, success=True)
         return output
 

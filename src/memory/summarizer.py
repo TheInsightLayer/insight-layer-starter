@@ -1,13 +1,14 @@
-
-from openai import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage
 import os
 import json
 import time
+from typing import Dict
 from src.utils.review_classifier import auto_score_review
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4")
 
-def fallback_summarize(output: str, context: dict) -> dict:
+def fallback_summarize(output: str, context: Dict[str, str]) -> Dict[str, str]:
     return {
         "who": "Insight Agent",
         "what": output.split(".")[0][:60] if output else "Unstructured insight",
@@ -18,7 +19,7 @@ def fallback_summarize(output: str, context: dict) -> dict:
         "source": output
     }
 
-def summarize_output(output: str, context: dict, use_llm: bool = True, max_retries: int = 2) -> dict:
+def summarize_output(output: str, context: Dict[str, str], use_llm: bool = True, max_retries: int = 2) -> Dict[str, str]:
     if not use_llm:
         return fallback_summarize(output, context)
 
@@ -29,14 +30,11 @@ def summarize_output(output: str, context: dict, use_llm: bool = True, max_retri
     user_prompt = f"Context: {context}\n\nOutput: {output}"
     for attempt in range(max_retries + 1):
         try:
-            response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ]
-            )
-            summary = json.loads(response.choices[0].message.content.strip())
+            response = client([
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=user_prompt)
+            ])
+            summary = json.loads(response.content.strip())
             review = auto_score_review(summary)
             summary.update(review)
             return summary

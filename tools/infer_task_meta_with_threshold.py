@@ -1,10 +1,10 @@
-
 import json
 import os
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 
 llm = ChatOpenAI(model="gpt-4", temperature=0.2)

@@ -1,7 +1,11 @@
 import yaml
 import os
+from dotenv import load_dotenv
 
-CONFIG_PATH = "configs/importance_weights.yaml"
+# Load environment variables
+load_dotenv()
+
+CONFIG_PATH = os.getenv("CONFIG_PATH", "configs/importance_weights.yaml")
 
 def load_weights():
     if os.path.exists(CONFIG_PATH):

@@ -10,9 +10,15 @@ from sentence_transformers import SentenceTransformer, util
 import unittest
 from unittest.mock import patch, MagicMock
 from src.utils.scoring import compute_importance
+from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Load environment variables
+load_dotenv()
+
+config_path = os.getenv("MEMORY_CONFIG_PATH", "configs/memory_config.yaml")
 
 class InsightLayerMemory:
     def __init__(self, vault_path: str = "data/memory.db"):
@@ -21,7 +27,6 @@ class InsightLayerMemory:
         os.makedirs(self.insight_dir, exist_ok=True)
 
         # Load configuration
-        config_path = os.path.join("configs", "memory_config.yaml")
         with open(config_path, "r") as f:
             config = yaml.safe_load(f)
         self.similarity_threshold = config.get("similarity_threshold", 0.75)

@@ -1,7 +1,6 @@
 import streamlit as st
 import os
 import yaml
-from dotenv import load_dotenv
 from src.graph.task_parser import parse_task
 from src.graph.dynamic_prompt_builder import build_dynamic_prompt
 from src.graph.task_agent import run_task
@@ -9,6 +8,7 @@ from src.graph.summarizer import summarize_output
 from src.memory.insight_layer_memory import InsightLayerMemory
 from agents.insight_layer_langgraph_full_agent import insight_agent_graph
 from tools.infer_task_meta_with_threshold import infer_task_meta
+from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()

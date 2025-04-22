@@ -1,17 +1,22 @@
-import openai
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage
 import os
 import json
 import logging
 import time
-from typing import Dict
+from typing import Dict, Any
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4")
 
-def load_thresholds(config_path: str = "configs/review_thresholds.json") -> dict:
+def load_thresholds(config_path: str = "configs/review_thresholds.json") -> Dict[str, Any]:
     try:
         with open(config_path, "r") as f:
             return json.load(f)
@@ -24,16 +29,13 @@ def load_thresholds(config_path: str = "configs/review_thresholds.json") -> dict
             "default_review_status": "pending"
         }
 
-def call_llm_with_retry(prompt, retries=3, delay=2):
+def call_llm_with_retry(prompt: str, retries: int = 3, delay: int = 2) -> Any:
     for attempt in range(retries):
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "You are a safety-aware AI reviewer for organizational insights."},
-                    {"role": "user", "content": prompt}
-                ]
-            )
+            response = client([
+                SystemMessage(content="You are a safety-aware AI reviewer for organizational insights."),
+                HumanMessage(content=prompt)
+            ])
             return response
         except Exception as e:
             logger.warning(f"LLM call failed on attempt {attempt + 1}: {str(e)}")
@@ -42,7 +44,7 @@ def call_llm_with_retry(prompt, retries=3, delay=2):
             else:
                 raise
 
-def auto_score_review(insight: Dict) -> Dict:
+def auto_score_review(insight: Dict[str, str]) -> Dict[str, Any]:
     """
     Uses GPT-4 to evaluate an InsightUnit for confidence and sensitivity,
     and recommends a review_status based on configured thresholds.
@@ -94,7 +96,7 @@ Return a JSON object with:
     try:
         response = call_llm_with_retry(prompt)
         try:
-            content = response.choices[0].message.content.strip()
+            content = response.content.strip()
             result = json.loads(content)
         except (KeyError, json.JSONDecodeError) as e:
             logger.error(f"Invalid LLM response: {str(e)}")

@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
 
 from langchain.tools import Tool
 from src.utils.retrieve_insights import retrieve_insights  # Adjust path if needed

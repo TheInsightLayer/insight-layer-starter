@@ -19,35 +19,30 @@ purpose-driven intelligence.
 
 import os
 from datetime import datetime
-from openai import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage
 from src.graph.task_parser import parse_task  # replace if parse_task is local
 from src.graph.prompt_constructor import construct_prompt  # replace if overridden
 from src.memory.insight_layer_memory import InsightLayerMemory
 from dotenv import load_dotenv
 
-
+# Load environment variables from .env
 load_dotenv()
+
+# Example usage
+openai_api_key = os.getenv("OPENAI_API_KEY")
+if not openai_api_key:
+    raise ValueError("OPENAI_API_KEY environment variable not set")
 
 # --- Task Agent ---
 def run_task(prompt, task_meta=None):
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if not openai_api_key:
-        raise ValueError("OPENAI_API_KEY environment variable not set")
-
-    client = OpenAI(api_key=openai_api_key)
+    client = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-4")
 
     purpose = task_meta.get("purpose", "assistant") if task_meta else "assistant"
     system_msg = f"You are an assistant specializing in {purpose}."
 
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": system_msg},
-            {"role": "user", "content": prompt}
-        ]
-    )
-
-    return response.choices[0].message.content.strip()
+    response = client([SystemMessage(content=system_msg), HumanMessage(content=prompt)])
+    return response.content.strip()
 
 # --- Output Summarizer ---
 def summarize_output(output, context):
