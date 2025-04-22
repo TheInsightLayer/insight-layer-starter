@@ -1,17 +1,36 @@
-# Contributing to Insight Layer Starter
+# Contributing to Insight Layer
 
-Thank you for your interest in contributing! Here are a few ways to help:
+Thanks for your interest in contributing to the Insight Layer project!
 
-## Add Insights
-- Submit a PR with a new example doc in `docs/`
-- Run extraction and verify it stores as expected
+We're building a new category of organizational memory infrastructure — and thoughtful contributions help us make this vision a realit
+---
 
-## Add Features
-- Improve the UI (filters, editing, etc.)
-- Enhance extraction (prompt tuning, retries)
-- Add database migrations or export features
+## 🤝 How You Can Contribute
 
-## Feedback
-- File an issue with bugs, suggestions, or improvement ideas
+We welcome:
+- Bug reports and issues
+- Feature suggestions
+- Small code or doc improvements
+- Use case feedback or deployment stories
 
-We welcome contributions from beginners and experts alike!
+> **Note:** This is a community-driven project under a **Business Source License (BUSL)**. Please review the license before contributing.
+
+---
+
+## 🛡️ Important Legal Notes
+
+- By submitting a contribution, you agree that it is your own work and that you have the right to license it to us.
+- All contributions are subject to the terms of the **BUSL 1.1** license.
+- Commercial or external use beyond the license terms is **not permitted**.
+- InsightLayer.org retains full rights to incorporate, modify, or exclude contributions.
+
+---
+
+## ⚙️ Development Setup
+
+> Starter setup instructions for local dev (if any). You can leave this minimal:
+
+```bash
+git clone https://github.com/TheInsightLayer/insight-layer-starter.git
+cd insight-layer-starter
+streamlit run app.py

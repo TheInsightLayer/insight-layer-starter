@@ -1,14 +1,21 @@
-MIT License
+Business Source License 1.1
 
-Copyright (c) 2025 InsightLayer.org
+Parameters
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the “Software”), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Licensor: InsightLayer.org  
+Licensed Work: The Insight Layer codebase  
+Additional Use Grant: Non-commercial internal use  
+Change Date: April 30, 2029  
+Change License: Apache 2.0
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+Terms
+
+The Licensed Work is provided under the terms of the Business Source License 1.1 (BUSL), a copy of which is available at: https://mariadb.com/bsl11
+
+Any use of the Licensed Work that is not an Additional Use Grant is expressly prohibited.
+
+Effective on the Change Date, or the date specified in any later version of this file by the Licensor, the Change License will apply.
+
+Licensed Work, Additional Use Grant, Change Date, and Change License are as defined above.
+
+This License does not grant the right to use the trademarks, service marks, or logos of InsightLayer.org.
