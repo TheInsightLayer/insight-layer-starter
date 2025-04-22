@@ -34,13 +34,17 @@ This framework empowers AI agents and organizations to:
 ├── insight_layer_app/              # Streamlit multi-page UI
 │   ├── Home.py                     # Landing screen
 │   └── pages/
-│       ├── 1_Run_Insight_Agent.py
-│       ├── 2_Bundle_Viewer.py
-│       ├── 3_Bundle_Admin.py
-│       ├── 4_Onboarding_Insights.py
-│       ├── 5_Importance_Scoring.py
-│       ├── 6_Insight_Graph.py
-│       └── 7_Grounding_Checks.py
+│   ├── 1_Run_Insight_Agent.py       # Run a LangGraph agent with memory injection and summarization
+│   ├── 2_Bundle_Viewer.py           # View existing bundles of curated insights by topic or role
+│   ├── 3_Bundle_Admin.py            # Create, edit, and manage InsightBundles (role- or topic-based)
+│   ├── 4_Onboarding_Insights.py     # Role-specific onboarding experience with read tracking
+│   ├── 5_Importance_Scoring.py      # Adjust weights and view ranked insights by importance
+│   ├── 6_Insight_Graph.py           # Visualize relationships between insights (PyVis/Neo4j planned)
+│   ├── 7_Grounding_Checks.py        # Check that insight references (files, URLs, SQL) are valid
+│   ├── 8_Add_Insight_From_File.py   # Upload a file and generate a new insight from it
+│   ├── 9_Add_Insight_From_SQL.py    # Paste a SQL query and generate a new insight
+│   ├── 10_Add_Insight_From_Notes.py # Paste manual notes to convert into a structured InsightUnit
+│   ├── 11_New_Insight_Sources.py    # Combine manual and external insight generation options (future UX hub)
 ├── src/
 │   ├── graph/                      # Task parsing, prompt building, insight writing
 │   ├── memory/                     # Vector memory, schema, logging
