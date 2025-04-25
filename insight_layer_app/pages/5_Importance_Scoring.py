@@ -13,10 +13,19 @@ def load_and_score_insights(insight_dir, weights):
         if f.endswith(".json"):
             try:
                 with open(os.path.join(insight_dir, f)) as j:
-                    d = json.load(j)
-                    score = compute_importance(d, weights)
-                    d["importance_score"] = score
-                    rows.append((score, d))
+                    content = json.load(j)
+
+                    # Normalize to a list of InsightUnits
+                    insights = content if isinstance(content, list) else [content]
+
+                    for d in insights:
+                        if not isinstance(d, dict):
+                            st.warning(f"Invalid insight in {f}: {type(d)}")
+                            continue
+                        score = compute_importance(d, weights)
+                        d["importance_score"] = score
+                        rows.append((score, d))
+
             except (json.JSONDecodeError, FileNotFoundError) as e:
                 st.error(f"Error processing file {f}: {e}")
     return sorted(rows, reverse=True)
@@ -26,7 +35,7 @@ def main():
     st.title("Tune Insight Importance")
     st.caption("Interactively tune scoring weights to reprioritize insights based on recency, impact, and usage.")
 
-    insight_dir = "data/insights"
+    insight_dir = "data/normalized_insights"  # updated to cleaned folder
     weights = load_weights()
 
     with st.sidebar:
@@ -50,26 +59,25 @@ def main():
 
     role_filter = st.selectbox("Filter by role", ["All", "engineer", "field_marketer", "product_manager"])
     if role_filter != "All":
-        rows = [(score, insight) for score, insight in rows if role_filter in insight.get("roles", [])]
+        rows = [(score, i) for score, i in rows if role_filter in i.get("narrative", {}).get("roles", [])]
 
     search_query = st.text_input("Search insights", "")
     if search_query:
-        rows = [(score, insight) for score, insight in rows if search_query.lower() in insight["what"].lower()]
+        rows = [(score, i) for score, i in rows if search_query.lower() in i.get("narrative", {}).get("what", "").lower()]
 
-    # Add sort order selection
     sort_order = st.radio("Sort Order", ["High to Low", "Low to High"], horizontal=True)
     rows = sorted(rows, reverse=(sort_order == "High to Low"))
 
     for score, insight in rows:
-        with st.expander(f"{insight['what']} — Score: {score:.2f}"):
-            st.markdown(
-                f"**Why:** {insight['why']}  \n"
-                f"**Outcome:** {insight['outcome']}  \n"
-                f"**When:** {insight.get('when', '—')}  \n"
-                f"**Source:** {insight.get('source', '—')}"
-            )
-            st.markdown(f"**Role(s):** {', '.join(insight.get('roles', []))}")
-            st.markdown(f"**Badge:** {insight.get('badge', '—')}")
+        narr = insight.get("narrative", {})
+        st.expander(f"{narr.get('what', 'Untitled')} — Score: {score:.2f}", expanded=False).markdown(
+            f"**Why:** {narr.get('why', '—')}  \n"
+            f"**Outcome:** {narr.get('outcome', '—')}  \n"
+            f"**When:** {narr.get('when', '—')}  \n"
+            f"**Source:** {narr.get('source', '—')}  \n"
+            f"**Role(s):** {', '.join(narr.get('roles', []))}  \n"
+            f"**Badge:** {narr.get('badge', '—')}"
+        )
 
 if __name__ == "__main__":
     main()

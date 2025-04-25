@@ -19,17 +19,19 @@ purpose-driven intelligence.
 
 import os
 from datetime import datetime
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage, SystemMessage
-from src.graph.task_parser import parse_task  # replace if parse_task is local
-from src.graph.prompt_constructor import construct_prompt  # replace if overridden
-from src.memory.insight_layer_memory import InsightLayerMemory
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage
 
-# Load environment variables from .env
+from src.graph.task_parser import parse_task
+from src.graph.prompt_constructor import construct_prompt
+from src.memory.summarizer import summarize_and_normalize
+from src.memory.insight_layer_memory import InsightLayerMemory
+from src.utils.normalize_fields import normalize_insight
+
+
+# Load environment variables
 load_dotenv()
-
-# Example usage
 openai_api_key = os.getenv("OPENAI_API_KEY")
 if not openai_api_key:
     raise ValueError("OPENAI_API_KEY environment variable not set")
@@ -37,68 +39,31 @@ if not openai_api_key:
 # --- Task Agent ---
 def run_task(prompt, task_meta=None):
     client = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-4")
-
     purpose = task_meta.get("purpose", "assistant") if task_meta else "assistant"
     system_msg = f"You are an assistant specializing in {purpose}."
-
     response = client([SystemMessage(content=system_msg), HumanMessage(content=prompt)])
     return response.content.strip()
-
-# --- Output Summarizer ---
-def summarize_output(output, context):
-    return {
-        "who": "Insight Agent",
-        "what": output.splitlines()[0][:80] if output else "Generated insight",
-        "when": datetime.now().strftime("%Y-%m-%d"),
-        "why": context.get("purpose", "general"),
-        "how": "Generated based on past insights and agent reasoning.",
-        "outcome": "Pending execution",
-        "source": output
-    }
-
-# --- Prompt Constructor ---
-def construct_prompt(task, insights):
-    if insights:
-        insight_text = "\n".join(
-            [f"- {i['who']} did {i['what']} because {i['why']} (Outcome: {i['outcome']})" for i in insights]
-        )
-        return f"Use the following prior insights:\n{insight_text}\n\nTask: {task}"
-    else:
-        return f"No prior insights found.\n\nTask: {task}"
-
-# --- Task Parser (simple placeholder or override if imported) ---
-def parse_task(prompt):
-    return {
-        "purpose": "campaign planning",
-        "quarter": "Q3",
-        "topic": "customer retention"
-    }
 
 # --- Main Logic ---
 def main():
     user_input = "Create a customer retention campaign for Q3."
     task_meta = parse_task(user_input)
 
-    memory = InsightLayerMemory()  # vault_path is optional if defaulted
-
-    # Load relevant insights
+    memory = InsightLayerMemory()
     insights = memory.load_context(task_meta)
 
-    # Construct prompt
     enriched_prompt = construct_prompt(user_input, insights)
-
-    # Run agent with prompt and metadata
     agent_output = run_task(enriched_prompt, task_meta)
 
-    # Summarize and store new insight
-    new_insight = summarize_output(agent_output, task_meta)
-    memory.save_context(new_insight)
+    # Create, normalize, and store new insight
+    raw_insight = summarize_and_normalize(agent_output, task_meta)
+    normalized_insight = normalize_insight(raw_insight)
+    memory.save_context(normalized_insight)
 
     print("\n--- Agent Output ---\n")
     print(agent_output)
     print("\n--- Insight Stored ---\n")
-    print(new_insight)
-
+    print(normalized_insight)
 
 if __name__ == "__main__":
     main()

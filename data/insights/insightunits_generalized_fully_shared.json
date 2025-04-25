@@ -1,0 +1,673 @@
+[
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_001304",
+			"title": "Distributor Playbook: Distributor X Launch Support",
+			"type": "ObservedPattern",
+			"status": "active",
+			"tags": [
+				"distributor",
+				"playbook:",
+				"mckesson"
+			],
+			"summary": "Tactics used by the Northeast team to get Product A on shelves in Distributor X's Q1 onboarding window led to 21% faster time-to-shelf.",
+			"key_takeaways": [
+				"Tactics used by the Northeast team to get Product A on shelves in Distributor X's Q1 onboarding window led to 21% faster time-to-shelf",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_001304_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "approved",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.79,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "reinforcing",
+				"match_score": 0.76,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-005-01",
+					"end": "2025-005-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_001305",
+			"title": "Campaign Messaging Reuse: Growth Formula Outreach",
+			"type": "PromptAnchor",
+			"status": "active",
+			"tags": [
+				"campaign",
+				"messaging",
+				"reuse:"
+			],
+			"summary": "Social assets with 'supports growth in every stage' phrasing drove highest engagement among target customers in Q1 campaigns for Product A.",
+			"key_takeaways": [
+				"Social assets with 'supports growth in every stage' phrasing drove highest engagement among target customers in Q1 campaigns for Product A",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_001305_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "reinforcing",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.8,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "reinforcing",
+				"match_score": 0.77,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-006-01",
+					"end": "2025-006-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_001306",
+			"title": "Brand Tracker Change Following Supply Chain Event",
+			"type": "ObservedPattern",
+			"status": "active",
+			"tags": [
+				"brand",
+				"tracker",
+				"change"
+			],
+			"summary": "Brand favorability dipped by 17 pts post February stock outage. Insight ties sentiment dip to delay communications and competitor pricing advantage.",
+			"key_takeaways": [
+				"Brand favorability dipped by 17 pts post February stock outage",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_001306_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "reinforcing",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.81,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "approved_summary",
+				"match_score": 0.79,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-007-01",
+					"end": "2025-007-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_001307",
+			"title": "Segmentation Logic: Segment A vs Segment B Leads",
+			"type": "PromptAnchor",
+			"status": "active",
+			"tags": [
+				"segmentation",
+				"logic:",
+				"Segment A"
+			],
+			"summary": "Segmentation update split 'Segment A' and 'Segment B' — the new model increased CTR on emails by 24%.",
+			"key_takeaways": [
+				"Segmentation update split 'Segment A' and 'Segment B' — the new model increased CTR on emails by 24%",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_001307_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "reinforcing",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.82,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "reinforcing",
+				"match_score": 0.8,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-008-01",
+					"end": "2025-008-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_001308",
+			"title": "MMM Memory: Paid Social Outperformed Display in Trial Conversions",
+			"type": "ObservedPattern",
+			"status": "active",
+			"tags": [
+				"mmm",
+				"memory:",
+				"paid"
+			],
+			"summary": "Q3 MMM showed paid social drove $1.43 per trial vs display at $3.25. Insight helps inform 2025 budget reallocation.",
+			"key_takeaways": [
+				"Q3 MMM showed paid social drove $1",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_001308_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "approved",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.83,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "reinforcing",
+				"match_score": 0.82,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-009-01",
+					"end": "2025-009-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_001309",
+			"title": "KPI Disagreement: Trial vs Repeat Confusion",
+			"type": "PromptAnchor",
+			"status": "active",
+			"tags": [
+				"kpi",
+				"disagreement:",
+				"trial"
+			],
+			"summary": "One team tracked trial as samples shipped, another as first purchase. Insight flagged misalignment, reducing dashboard disputes.",
+			"key_takeaways": [
+				"One team tracked trial as samples shipped, another as first purchase",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_001309_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "reinforcing",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.84,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "approved_summary",
+				"match_score": 0.83,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-010-01",
+					"end": "2025-010-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_0013010",
+			"title": "provider Inquiry Memory: Allergy Question Handling",
+			"type": "ObservedPattern",
+			"status": "active",
+			"tags": [
+				"provider",
+				"inquiry",
+				"memory:"
+			],
+			"summary": "Common provider question: 'Is Product C low-lactose formulation?' Field responses now link to March label guidance and clinical references.",
+			"key_takeaways": [
+				"Common provider question: 'Is Product C low-lactose formulation?' Field responses now link to March label guidance and clinical references",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_0013010_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "reinforcing",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.85,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "reinforcing",
+				"match_score": 0.85,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-011-01",
+					"end": "2025-011-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_0013011",
+			"title": "Regulatory Language Guidance: 'gentle language Formula' Usage",
+			"type": "PromptAnchor",
+			"status": "active",
+			"tags": [
+				"regulatory",
+				"claim",
+				"approval"
+			],
+			"summary": "Internal documentation show 'gentle language' can be used if tied to Segment A health studies. Previously restricted language now clarified.",
+			"key_takeaways": [
+				"Internal documentation show 'gentle language' can be used if tied to Segment A health studies",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_0013011_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "reinforcing",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.86,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "reinforcing",
+				"match_score": 0.86,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-012-01",
+					"end": "2025-012-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_0013012",
+			"title": "Role-Based Onboarding: Product A Brand Manager Starter Pack",
+			"type": "ObservedPattern",
+			"status": "active",
+			"tags": [
+				"role-based",
+				"onboarding:",
+				"similac"
+			],
+			"summary": "Curated insight bundle for new brand managers includes top 20 most-cited messaging, campaign results, and KPI definitions.",
+			"key_takeaways": [
+				"Curated insight bundle for new brand managers includes top 20 most-cited messaging, campaign results, and KPI definitions",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_0013012_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "approved",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.87,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "approved_summary",
+				"match_score": 0.88,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-001-01",
+					"end": "2025-001-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_0013013",
+			"title": "Insight Stewardship: Flagged Outdated POS Insights",
+			"type": "PromptAnchor",
+			"status": "active",
+			"tags": [
+				"insight",
+				"stewardship:",
+				"flagged"
+			],
+			"summary": "System flagged 14 insights older than 18 months, including Retail Chain A display strategies that no longer apply due to layout changes.",
+			"key_takeaways": [
+				"System flagged 14 insights older than 18 months, including Retail Chain A display strategies that no longer apply due to layout changes",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_0013013_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "reinforcing",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.88,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "reinforcing",
+				"match_score": 0.9,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-002-01",
+					"end": "2025-002-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	},
+	{
+		"InsightUnit": {
+			"schema_version": "v1.1",
+			"id": "insight_0013014",
+			"title": "Copilot Prompt Grounding: Best-Performing Segment A Claims",
+			"type": "ObservedPattern",
+			"status": "active",
+			"tags": [
+				"copilot",
+				"prompt",
+				"grounding:"
+			],
+			"summary": "Segment A health messaging tagged with +18% lift in trial conversion now suggested in Copilot for relevant provider prompts.",
+			"key_takeaways": [
+				"Segment A health messaging tagged with +18% lift in trial conversion now suggested in Copilot for relevant provider prompts",
+				"See full context for detailed metrics."
+			],
+			"supporting_evidence": [
+				"/insights/insight_0013014_evidence.pdf"
+			],
+			"provenance": {
+				"origin_method": "internal analysis or field review",
+				"alignment_type": "reinforcing",
+				"created_by": "insights@examplecorp.com"
+			},
+			"confidence": {
+				"level": "correlation_pattern",
+				"score": 0.89,
+				"linked_outcome": "engagement_lift"
+			},
+			"fidelity": {
+				"level": "reinforcing",
+				"match_score": 0.91,
+				"verified_by": [
+					"insights@examplecorp.com"
+				],
+				"validated_on": "2025-04-24",
+				"review_needed": false
+			},
+			"lifecycle": {
+				"active_period": {
+					"start": "2025-003-01",
+					"end": "2025-003-28"
+				},
+				"expiration_date": "2026-12-31"
+			},
+			"audience_and_access": {
+				"division": "Health",
+				"region": "Region A",
+				"intended_audience": [
+					"Brand Manager",
+					"MSL"
+				],
+				"allowed_roles": [
+					"data_analyst",
+					"marketing_lead"
+				],
+				"visibility": "internal"
+			}
+		}
+	}
+]

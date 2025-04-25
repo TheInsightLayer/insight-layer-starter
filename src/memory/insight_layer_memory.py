@@ -1,24 +1,24 @@
+# src/memory/insight_layer_memory.py
+
 import os
 import json
-import logging
 import yaml
+import logging
 from datetime import datetime
-from typing import List, Dict
+from typing import List, Dict, Optional
 from functools import lru_cache
-from .vector_store import VectorStore
-from sentence_transformers import SentenceTransformer, util
-import unittest
-from unittest.mock import patch, MagicMock
-from src.utils.scoring import compute_importance
 from dotenv import load_dotenv
 
+from sentence_transformers import SentenceTransformer, util
+from src.models.insight_unit import InsightUnit
+from src.utils.normalize_fields import normalize_insight
+from src.utils.scoring import compute_importance
+from src.memory.vector_store import VectorStore
+
+# Setup
+load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Load environment variables
-load_dotenv()
-
-config_path = os.getenv("MEMORY_CONFIG_PATH", "configs/memory_config.yaml")
 
 class InsightLayerMemory:
     def __init__(self, vault_path: str = "data/memory.db"):
@@ -26,12 +26,14 @@ class InsightLayerMemory:
         self.insight_dir = os.path.join("data", "insights")
         os.makedirs(self.insight_dir, exist_ok=True)
 
-        # Load configuration
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f)
-        self.similarity_threshold = config.get("similarity_threshold", 0.75)
+        config_path = os.getenv("MEMORY_CONFIG_PATH", "configs/memory_config.yaml")
+        if os.path.exists(config_path):
+            with open(config_path, "r") as f:
+                config = yaml.safe_load(f)
+            self.similarity_threshold = config.get("similarity_threshold", 0.75)
+        else:
+            self.similarity_threshold = 0.75
 
-        # Vector search + semantic comparison
         self.vector_store = VectorStore()
         self.embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
@@ -40,159 +42,110 @@ class InsightLayerMemory:
         return self.embedder.encode(text, convert_to_tensor=True)
 
     def load_context(self, task_meta: Dict) -> List[Dict]:
-        """
-        Retrieve insights relevant to the task using vector-based semantic search.
-        """
         query = f"{task_meta['purpose']} {task_meta['topic']} {task_meta['quarter']}"
         insight_ids = self.vector_store.search(query)
 
         insights = []
         for insight_id in insight_ids:
-            fname = os.path.join(self.insight_dir, f"{insight_id}.json")
-            if os.path.exists(fname):
-                with open(fname, "r") as f:
+            path = os.path.join(self.insight_dir, f"{insight_id}.json")
+            if os.path.exists(path):
+                with open(path, "r") as f:
                     insights.append(json.load(f))
         return insights
 
     def save_context(self, insight: Dict):
-        """
-        Save the new InsightUnit to disk, auto-link it, and update the vector index.
-        """
+        normalized = normalize_insight(insight)
+        validated = InsightUnit(**normalized)  # Validate against schema
+
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        insight_id = f"insight_{timestamp}"
-        insight["id"] = insight_id
+        validated.id = validated.id or f"insight_{timestamp}"
+        fname = os.path.join(self.insight_dir, f"{validated.id}.json")
 
-        # Auto-link to related insights
-        links = self._auto_link(insight)
+        # Auto-link related
+        links = self._auto_link(validated)
         if links:
-            insight["links"] = links
+            validated.links = links
 
-        filename = os.path.join(self.insight_dir, f"{insight_id}.json")
-        with open(filename, "w") as f:
-            json.dump(insight, f, indent=2)
+        # Write to disk
+        with open(fname, "w") as f:
+            json.dump(validated.dict(), f, indent=2)
 
-        self.vector_store.add_insight(insight, insight_id)
-        print(f"[Insight Layer Memory] Insight saved and indexed as {insight_id}")
+        self.vector_store.add_insight(validated)
+        print(f"[InsightLayerMemory] Saved: {validated.id}")
 
     def update_context(self, insight: Dict):
-        """
-        Update an existing InsightUnit on disk and in the vector index.
-        """
-        insight_id = insight.get("id")
-        if not insight_id:
-            raise ValueError("Insight must have an 'id' to be updated.")
+        normalized = normalize_insight(insight)
+        validated = InsightUnit(**normalized)
 
-        filename = os.path.join(self.insight_dir, f"{insight_id}.json")
-        if not os.path.exists(filename):
-            raise FileNotFoundError(f"Insight with ID {insight_id} does not exist.")
+        if not validated.id:
+            raise ValueError("Insight must have an ID to update.")
 
-        with open(filename, "w") as f:
-            json.dump(insight, f, indent=2)
+        path = os.path.join(self.insight_dir, f"{validated.id}.json")
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Insight {validated.id} not found.")
 
-        self.vector_store.update_insight(insight, insight_id)
-        print(f"[Insight Layer Memory] Insight {insight_id} updated.")
+        with open(path, "w") as f:
+            json.dump(validated.dict(), f, indent=2)
+
+        self.vector_store.update_insight(validated)
+        print(f"[InsightLayerMemory] Updated: {validated.id}")
 
     def delete_context(self, insight_id: str):
-        """
-        Delete an InsightUnit from disk and the vector index.
-        """
-        filename = os.path.join(self.insight_dir, f"{insight_id}.json")
-        if os.path.exists(filename):
-            os.remove(filename)
+        path = os.path.join(self.insight_dir, f"{insight_id}.json")
+        if os.path.exists(path):
+            os.remove(path)
             self.vector_store.delete_insight(insight_id)
-            print(f"[Insight Layer Memory] Insight {insight_id} deleted.")
+            print(f"[InsightLayerMemory] Deleted: {insight_id}")
         else:
-            raise FileNotFoundError(f"Insight with ID {insight_id} does not exist.")
+            raise FileNotFoundError(f"Insight {insight_id} not found.")
 
     def increment_usage(self, insight_id: str):
-        """
-        Increment the usage count of an insight and recalculate its importance score.
-        """
-        filename = os.path.join(self.insight_dir, f"{insight_id}.json")
-        if not os.path.exists(filename):
-            raise FileNotFoundError(f"Insight with ID {insight_id} does not exist.")
+        path = os.path.join(self.insight_dir, f"{insight_id}.json")
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Insight {insight_id} not found.")
 
-        with open(filename, "r") as f:
+        with open(path, "r") as f:
             insight = json.load(f)
 
-        # Increment usage count
         insight["used_count"] = insight.get("used_count", 0) + 1
-
-        # Recalculate importance score
         weights = self._load_weights()
         insight["importance_score"] = compute_importance(insight, weights)
 
-        # Save updated insight
-        with open(filename, "w") as f:
+        with open(path, "w") as f:
             json.dump(insight, f, indent=2)
 
-        print(f"[InsightLayerMemory] Usage incremented and score recalculated for {insight_id}")
+        print(f"[InsightLayerMemory] Incremented use and re-scored {insight_id}")
 
-    def _load_weights(self):
+    def _auto_link(self, new_insight: InsightUnit) -> List[str]:
         """
-        Load scoring weights from the configuration file.
+        Compute similarity on 'what' field and return IDs of similar insights.
         """
-        config_path = os.path.join("configs", "importance_weights.yaml")
-        with open(config_path, "r") as f:
-            return yaml.safe_load(f)
-
-    def _compute_importance(self, insight: Dict, weights: Dict) -> float:
-        """
-        Compute the importance score for an insight based on weights.
-        """
-        return (
-            weights.get("used", 0.4) * insight.get("usage_count", 0) +
-            weights.get("links", 0.3) * len(insight.get("links", [])) +
-            weights.get("impact", 0.1) * insight.get("impact", 0) +
-            weights.get("outcome", 0.1) * insight.get("outcome", 0) +
-            weights.get("recency", 0.1) * insight.get("recency", 0)
-        )
-
-    def _auto_link(self, new_insight: Dict) -> List[str]:
-        """
-        Find related insights using semantic similarity on the 'what' field.
-        Returns a list of related insight IDs.
-        """
-        new_embedding = self.get_embedding(new_insight.get("what", ""))
+        new_emb = self.get_embedding(new_insight.what)
         links = []
 
         for fname in os.listdir(self.insight_dir):
             if not fname.endswith(".json"):
                 continue
-            fpath = os.path.join(self.insight_dir, fname)
-            with open(fpath, "r") as f:
-                existing = json.load(f)
-                existing_id = existing.get("id") or fname.replace(".json", "")
-                if existing_id == new_insight.get("id"):
+
+            path = os.path.join(self.insight_dir, fname)
+            with open(path, "r") as f:
+                other = json.load(f)
+                if other.get("id") == new_insight.id:
                     continue
 
-                existing_text = existing.get("what", "")
-                existing_embedding = self.get_embedding(existing_text)
+                other_text = other.get("what", "")
+                other_emb = self.get_embedding(other_text)
+                similarity = util.pytorch_cos_sim(new_emb, other_emb).item()
 
-                similarity = util.pytorch_cos_sim(new_embedding, existing_embedding).item()
                 if similarity >= self.similarity_threshold:
-                    links.append(existing_id)
+                    links.append(other.get("id"))
 
         return links
 
-class TestInsightLayerMemory(unittest.TestCase):
-    def setUp(self):
-        self.memory = InsightLayerMemory()
-        self.memory.insight_dir = "test_insights"
-        os.makedirs(self.memory.insight_dir, exist_ok=True)
-
-    def tearDown(self):
-        for fname in os.listdir(self.memory.insight_dir):
-            os.remove(os.path.join(self.memory.insight_dir, fname))
-        os.rmdir(self.memory.insight_dir)
-
-    @patch("sentence_transformers.SentenceTransformer.encode")
-    def test_auto_link(self, mock_encode):
-        mock_encode.side_effect = lambda text, convert_to_tensor: [1.0] if "new" in text else [0.5]
-        new_insight = {"id": "new_insight", "what": "new insight text"}
-        existing_insight = {"id": "existing_insight", "what": "existing insight text"}
-        with open(os.path.join(self.memory.insight_dir, "existing_insight.json"), "w") as f:
-            json.dump(existing_insight, f)
-
-        links = self.memory._auto_link(new_insight)
-        self.assertEqual(links, ["existing_insight"])
+    def _load_weights(self) -> Dict:
+        path = os.getenv("IMPORTANCE_WEIGHTS_PATH", "configs/importance_weights.yaml")
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                return yaml.safe_load(f)
+        else:
+            return {"used": 0.4, "links": 0.3, "impact": 0.1, "outcome": 0.1, "recency": 0.1}

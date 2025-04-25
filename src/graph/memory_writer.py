@@ -1,7 +1,8 @@
 import os
 import json
 from src.memory.insight_layer_memory import InsightLayerMemory
-# from jsonschema import validate, ValidationError  # Uncomment if using schema
+from src.utils.normalize_fields import normalize_insight
+# from jsonschema import validate, ValidationError  # Optional schema validation
 
 def write_to_memory(insight: dict, validate_schema: bool = False):
     """
@@ -15,27 +16,35 @@ def write_to_memory(insight: dict, validate_schema: bool = False):
     """
 
     memory = InsightLayerMemory(vault_path="data/memory.db")
+    normalized = normalize_insight(insight)
 
-    # Optional: validate schema (requires schema + jsonschema package)
+    # Optional: validate schema (requires a JSON schema and jsonschema package)
     # if validate_schema:
     #     try:
-    #         from configs.insight_unit_schema import schema  # make sure this exists
-    #         validate(instance=insight, schema=schema)
+    #         from configs.insight_unit_schema import schema
+    #         validate(instance=normalized, schema=schema)
     #     except ValidationError as ve:
     #         print("❗ Insight schema validation failed:", ve)
     #         return
 
-    # Check for duplicates (same what + why + when)
-    existing = memory.load_context({"purpose": insight.get("why", ""), "topic": insight.get("what", ""), "quarter": insight.get("when", "")})
+    # Check for duplicates based on narrative fields
+    narrative = normalized.get("narrative", {})
+    existing = memory.load_context({
+        "purpose": narrative.get("why", ""),
+        "topic": narrative.get("what", ""),
+        "quarter": narrative.get("when", "")
+    })
+
     for e in existing:
+        existing_narr = e.get("narrative", {})
         if (
-            e.get("what") == insight.get("what") and
-            e.get("why") == insight.get("why") and
-            e.get("when") == insight.get("when")
+            existing_narr.get("what") == narrative.get("what") and
+            existing_narr.get("why") == narrative.get("why") and
+            existing_narr.get("when") == narrative.get("when")
         ):
             print("Duplicate insight found. Skipping save.")
             return
 
     # Save insight
-    memory.save_context(insight)
+    memory.save_context(normalized)
     print("Insight saved.")

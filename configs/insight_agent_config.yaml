@@ -6,6 +6,8 @@
 auto_bundle: true
 confidential_only: false
 trace_enabled: true
+normalize_fields: true
+output_file_name: loyalty_insight_q1.json
 
 task: Design a Q1 loyalty program
 
@@ -13,3 +15,5 @@ task_meta:
   purpose: campaign planning
   quarter: Q1
   topic: loyalty
+  topic_subtype: customer_retention
+  audience: marketing

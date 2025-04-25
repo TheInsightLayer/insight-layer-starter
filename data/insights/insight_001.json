@@ -1,40 +1,60 @@
-{
-  "who": "Ops Team",
-  "what": "Flagged churn rate spike",
-  "when": "2025-04-10",
-  "why": "Retention dropped significantly",
-  "how": "Queried active users monthly",
-  "outcome": "Triggered root cause investigation",
-  "source": "dashboard-churn-trends",
-  "references": [
-    {
-      "type": "dashboard",
-      "title": "Retention Metrics Q1-Q2",
-      "url": "https://dashboard.company.com/retention"
-    }
-  ],
-  "watch_sources": [
-    {
-      "type": "file",
-      "path": "data/insights/sample_report.csv",
-      "label": "Supporting Report"
+[
+  {
+    "schema_version": "v1.1",
+    "id": "untitled",
+    "title": "Flagged churn rate spike",
+    "type": "ObservedPattern",
+    "status": "active",
+    "tags": [],
+    "narrative": {
+      "who": "Ops Team",
+      "what": "Flagged churn rate spike",
+      "when": "2025-04-10",
+      "why": "Retention dropped significantly",
+      "how": "Queried active users monthly",
+      "outcome": "Triggered root cause investigation",
+      "source": "dashboard-churn-trends",
+      "references": [
+        {
+          "type": "dashboard",
+          "title": "Retention Metrics Q1-Q2",
+          "url": "https://dashboard.company.com/retention"
+        }
+      ],
+      "watch_sources": [
+        {
+          "type": "file",
+          "path": "data/insights/sample_report.csv",
+          "label": "Supporting Report"
+        },
+        {
+          "type": "url",
+          "url": "https://dashboard.company.com/retention",
+          "label": "Live Metrics"
+        },
+        {
+          "type": "sql",
+          "query": "SELECT COUNT(*) FROM users WHERE churned = 1",
+          "label": "Churn SQL Check"
+        }
+      ],
+      "confidentiality": "team_only",
+      "roles": [
+        "product_manager",
+        "data_analyst"
+      ],
+      "badge": "\ud83d\udd0d Critical Alert",
+      "review_status": "approved"
     },
-    {
-      "type": "url",
-      "url": "https://dashboard.company.com/retention",
-      "label": "Live Metrics"
+    "confidence": null,
+    "fidelity": null,
+    "access_control": {
+      "visibility": null,
+      "allowed_roles": null
     },
-    {
-      "type": "sql",
-      "query": "SELECT COUNT(*) FROM users WHERE churned = 1",
-      "label": "Churn SQL Check"
+    "business_context": {
+      "division": null,
+      "region": null
     }
-  ],
-  "confidentiality": "team_only",
-  "roles": [
-    "product_manager",
-    "data_analyst"
-  ],
-  "badge": "\ud83d\udd0d Critical Alert",
-  "review_status": "approved"
-}
+  }
+]

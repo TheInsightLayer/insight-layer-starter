@@ -6,3 +6,5 @@ data/*.jsonl
 data/insight_faiss/
 *.pkl
 *.db
+.venv
+venv/

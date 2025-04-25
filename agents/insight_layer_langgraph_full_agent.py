@@ -1,31 +1,29 @@
-"""
-LangGraph Agent: Insight Layer Flow
 
-This file defines a LangGraph-based agent that supports memory reuse, 
-insight creation, trace logging, and auto-bundling of outputs.
+"""
+LangGraph Agent: Insight Layer Flow (Normalized Schema Version)
+
+This agent supports memory reuse, insight creation, trace logging, and auto-bundling.
+All outputs follow the normalized InsightUnit schema.
 
 Key Features:
-- Loads relevant past insights from InsightLayerMemory
-- Injects them into prompt construction for the current task
-- Runs an LLM agent to generate a context-aware output
-- Summarizes and stores the output as a structured InsightUnit
-- Optionally logs trace history and updates a reusable bundle
+- Loads past insights via InsightMemoryTool
+- Constructs prompts using reusable memory
+- Summarizes and stores the output as a normalized InsightUnit
+- Logs trace history and bundles by topic
 
-This agent simulates collective memory by enabling reuse across 
-topics, quarters, and roles — all configurable per run.
+Schema fields like `confidence_level` have been renamed to `level`, etc.
 """
 
 from langgraph.graph import StateGraph, END
 from langchain.schema import SystemMessage
-from langchain.chat_models import ChatOpenAI
-from insight_memory_tool import InsightMemoryTool
+from langchain_openai import ChatOpenAI
+from tools.insight_memory_tool import InsightMemoryTool
 from src.graph.dynamic_prompt_builder import build_dynamic_prompt
 
 import os
 import json
 from datetime import datetime
 
-# === Core Components ===
 llm = ChatOpenAI(model="gpt-4", temperature=0.3)
 memory = InsightMemoryTool()
 tools = memory.as_langchain_tools()
@@ -33,7 +31,6 @@ tools = memory.as_langchain_tools()
 BUNDLE_PATH = "data/bundles"
 TRACE_PATH = "data/trace_logs"
 
-# === Step 1: Load Relevant Insights from Memory ===
 def fetch_context_node(state):
     task_meta = state["task_meta"]
     all_insights = memory.load_context(task_meta)
@@ -44,7 +41,6 @@ def fetch_context_node(state):
         state["prior_insights"] = all_insights
     return state
 
-# === Step 2: Run Agent Task Using Context ===
 def run_agent_node(state):
     task = state["task"]
     task_meta = state["task_meta"]
@@ -55,13 +51,11 @@ def run_agent_node(state):
     state["agent_output"] = response
     return state
 
-# === Step 3: Save Output as an InsightUnit ===
 def save_insight_node(state):
-    insight = memory.save_output_as_insight(state["agent_output"], state["task_meta"])
+    insight = memory.save_output_as_insight(state["agent_output"], state["task_meta"], normalize=True)
     state["saved_insight"] = insight
     return state
 
-# === Step 4: Optional Trace Logging ===
 def trace_node(state):
     if not state.get("trace_enabled"):
         return state
@@ -80,7 +74,6 @@ def trace_node(state):
 
     return state
 
-# === Step 5: Optional Auto-Bundling by Topic ===
 def bundle_insight_node(state):
     if not state.get("auto_bundle"):
         return state
@@ -114,7 +107,6 @@ def bundle_insight_node(state):
     state["bundle_updated"] = bundle_id
     return state
 
-# === LangGraph Pipeline Definition ===
 graph = StateGraph()
 graph.add_node("fetch_context", fetch_context_node)
 graph.add_node("run_agent", run_agent_node)
@@ -131,7 +123,6 @@ graph.set_finish_point("bundle_if_enabled")
 
 insight_agent_graph = graph.compile()
 
-# === Sample Run ===
 if __name__ == "__main__":
     result = insight_agent_graph.invoke({
         "task": "Develop a Q1 promotion strategy",

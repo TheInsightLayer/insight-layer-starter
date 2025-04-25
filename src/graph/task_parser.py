@@ -1,42 +1,65 @@
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
+from dotenv import load_dotenv
 import os
 import json
-import time
 import re
-from typing import Dict
-from dotenv import load_dotenv
+import uuid
 
 # Load environment variables
 load_dotenv()
+client = ChatOpenAI(
+    model="gpt-4",
+    temperature=0.3,
+    openai_api_key=os.getenv("OPENAI_API_KEY")
+)
 
-client = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4")
-
-def fallback_parse(prompt: str) -> Dict[str, str]:
+# -- Fallback method if LLM fails --
+def fallback_parse(prompt: str) -> dict:
     quarter_match = re.search(r'\bQ[1-4]\b', prompt, re.IGNORECASE)
-    quarter = quarter_match.group(0).upper() if quarter_match else "unspecified"
-    topic = "customer retention" if "retention" in prompt.lower() else "unspecified"
-    purpose = "campaign planning" if "campaign" in prompt.lower() else "general task"
-    return {"purpose": purpose, "topic": topic, "quarter": quarter}
+    quarter = quarter_match.group(0).upper() if quarter_match else "None"
+    topic = "loyalty" if "loyalty" in prompt.lower() else "general"
+    purpose = "campaign planning" if "campaign" in prompt.lower() or "promotion" in prompt.lower() else "general"
+    return {
+        "purpose": purpose,
+        "topic": topic,
+        "quarter": quarter
+    }
 
-def parse_task(prompt: str, use_llm: bool = True, max_retries: int = 2) -> Dict[str, str]:
-    if not use_llm:
+# -- Main parsing function --
+def parse_task(prompt: str) -> dict:
+    """
+    Attempts to extract task metadata (purpose, topic, quarter) from a prompt using OpenAI,
+    and falls back to keyword matching if that fails.
+    """
+    system_msg = "You are a helpful assistant extracting metadata from a business prompt."
+    user_msg = f"""
+Prompt: "{prompt}"
+
+Return only JSON with keys:
+- purpose (e.g. 'campaign planning', 'analytics', 'research')
+- topic (e.g. 'loyalty', 'retention', 'promotion')
+- quarter (e.g. 'Q1', 'Q2', or 'None' if not specified)
+"""
+
+    try:
+        response = client.invoke([
+            SystemMessage(content=system_msg),
+            HumanMessage(content=user_msg)
+        ])
+        parsed = json.loads(response.content)
+
+        return {
+            "purpose": parsed.get("purpose", "general"),
+            "topic": parsed.get("topic", "general"),
+            "quarter": parsed.get("quarter", "None")
+        }
+
+    except Exception as e:
+        print("[parse_task fallback]", e)
         return fallback_parse(prompt)
 
-    system_prompt = (
-        "You are an AI that extracts structured metadata from user instructions.\n"
-        "Return a JSON object with keys: purpose, topic, and quarter.\n"
-    )
-    for attempt in range(max_retries + 1):
-        try:
-            response = client([
-                SystemMessage(content=system_prompt),
-                HumanMessage(content=prompt)
-            ])
-            return json.loads(response.content.strip())
-        except Exception as e:
-            if attempt == max_retries:
-                fallback = fallback_parse(prompt)
-                fallback["error"] = f"LLM failed after {max_retries+1} attempts: {str(e)}"
-                return fallback
-            time.sleep(1)
+# Example usage
+if __name__ == "__main__":
+    example = "Design a Q2 promotion strategy to boost loyalty"
+    print(parse_task(example))

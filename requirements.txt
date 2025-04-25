@@ -13,3 +13,8 @@ pyyaml
 torch
 pytest-mock
 neo4j-driver
+numpy
+jsonschema
+langchain_community
+langchain-openai
+langgraph

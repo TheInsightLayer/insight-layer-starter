@@ -4,7 +4,7 @@ import yaml
 from src.graph.task_parser import parse_task
 from src.graph.dynamic_prompt_builder import build_dynamic_prompt
 from src.graph.task_agent import run_task
-from src.graph.summarizer import summarize_output
+from src.memory.summarizer import summarize_and_normalize
 from src.memory.insight_layer_memory import InsightLayerMemory
 from agents.insight_layer_langgraph_full_agent import insight_agent_graph
 from tools.infer_task_meta_with_threshold import infer_task_meta
@@ -29,7 +29,7 @@ if mode == " Freeform Prompt":
         context = memory.load_context(task_meta)
         enriched_prompt = build_dynamic_prompt(task_input, context, task_meta)
         result = run_task(enriched_prompt, task_meta)
-        summary = summarize_output(result, task_meta)
+        summary = summarize_and_normalize(result, task_meta)
         memory.save_context(summary)
 
         st.success(" Agent run complete!")

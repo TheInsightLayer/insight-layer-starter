@@ -1,6 +1,6 @@
 
 import json
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 
 llm = ChatOpenAI(model="gpt-4", temperature=0.2)

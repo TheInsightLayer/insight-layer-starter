@@ -1,7 +1,10 @@
-import streamlit as st
+import sys
 import os
 import json
 from datetime import datetime
+import streamlit as st
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 OUTCOME_LOG_PATH = "data/trace_logs/summary_outcomes"
 SUMMARY_DIR = "data/trace_logs/summaries"
@@ -14,12 +17,14 @@ def load_recent_summaries(limit=10):
     summaries = []
     for f in files[:limit]:
         if f.endswith(".json"):
-            with open(os.path.join(SUMMARY_DIR, f)) as j:
-                try:
+            try:
+                with open(os.path.join(SUMMARY_DIR, f)) as j:
                     data = json.load(j)
-                    summaries.append((f, data))
-                except json.JSONDecodeError:
-                    continue
+                    # If summary is nested, extract it
+                    insight = data.get("summary", data)  # fallback to root if no "summary"
+                    summaries.append((f, insight))
+            except json.JSONDecodeError:
+                continue
     return summaries
 
 def log_feedback(summary_id, feedback):
@@ -35,7 +40,7 @@ def log_feedback(summary_id, feedback):
 
 def main():
     st.set_page_config(page_title="Insight Layer: Feedback Tracker", layout="wide")
-    st.title("✅ Insight Summary Feedback")
+    st.title("Insight Summary Feedback")
 
     summaries = load_recent_summaries()
 
@@ -43,22 +48,21 @@ def main():
         st.info("No recent summaries found.")
         return
 
-    for filename, data in summaries:
-        insight = data.get("summary", {})
-        st.subheader(insight.get("what", "No Title"))
-        st.markdown(f"**Why:** {insight.get('why', '—')}  
-**Outcome:** {insight.get('outcome', '—')}")
-        st.markdown(f"**Source:** {insight.get('source', '—')}")
+    for filename, summary in summaries:
+        narr = summary.get("narrative", {})
+        st.subheader(narr.get("what", "No Title"))
+        st.markdown(f"**Why:** {narr.get('why', '—')}  \n**Outcome:** {narr.get('outcome', '—')}")
+        st.markdown(f"**Source:** {narr.get('source', '—')}")
 
         col1, col2 = st.columns([1, 2])
         with col1:
             if st.button("👍 Useful", key=f"useful_{filename}"):
                 log_feedback(filename, "useful")
-                st.success("Feedback saved: Useful ✅")
+                st.success("Feedback saved: Useful")
         with col2:
             if st.button("👎 Not Useful", key=f"not_useful_{filename}"):
                 log_feedback(filename, "not_useful")
-                st.warning("Feedback saved: Not Useful ❌")
+                st.warning("Feedback saved: Not Useful")
 
 if __name__ == "__main__":
     main()

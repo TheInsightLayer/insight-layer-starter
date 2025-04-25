@@ -1,8 +1,12 @@
-
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
+from langchain.schema import HumanMessage
+import json
+from dotenv import load_dotenv
+import os
 
-llm = ChatOpenAI(model="gpt-4", temperature=0.2)
+load_dotenv()
+llm = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4", temperature=0.2)
 
 def infer_task_meta(task_string: str) -> dict:
     prompt = PromptTemplate.from_template("""
@@ -17,11 +21,11 @@ Extract the following:
 
 Respond in JSON format with keys: purpose, topic, quarter.
 """)
-    response = llm.predict(prompt.format(task_string=task_string))
+    # Use the new `invoke` method
+    response = llm.invoke([HumanMessage(content=prompt.format(task_string=task_string))])
 
     try:
-        import json
-        result = json.loads(response)
+        result = json.loads(response.content)
         return {
             "purpose": result.get("purpose", "general"),
             "topic": result.get("topic", "general"),
